@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Providers\AdapterServiceProvider;
 use App\Providers\RepositoryServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RepositoryServiceProvider::class);
+        $this->app->register(AdapterServiceProvider::class);
     }
 
     /**
