@@ -29,53 +29,43 @@
     <div class="row h-100">
         <div class="col-2 collapse d-md-flex bg-faded pt-2 h-100" id="sidebar">
             <ul class="nav nav-pills flex-column">
-                <li class="nav-item"><a class="nav-link" href="#">Overview</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">Users</a></li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="#submenu1" data-toggle="collapse" data-target="#submenu1">Reports</a>
+                    <a class="nav-link collapsed" href="#submenu1" data-toggle="collapse" data-target="#submenu1">Payment
+                        Methods</a>
                     <div class="collapse" id="submenu1" aria-expanded="false">
                         <ul class="flex-column pl-2 nav">
                             <li class="nav-item">
-                                <a class="nav-link py-0" href="">Orders</a>
+                                <a class="nav-link py-0" href="{{ route('payment-methods.idex') }}">Payment Methods</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link collapsed py-0" href="#submenu1sub1" data-toggle="collapse"
-                                   data-target="#submenu1sub1">Customers</a>
-                                <div class="collapse small" id="submenu1sub1" aria-expanded="false">
-                                    <ul class="flex-column nav pl-4">
-                                        <li class="nav-item">
-                                            <a class="nav-link p-0" href="">
-                                                <i class="fa fa-fw fa-clock-o"></i> Daily
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link p-0" href="">
-                                                <i class="fa fa-fw fa-dashboard"></i> Dashboard
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link p-0" href="">
-                                                <i class="fa fa-fw fa-bar-chart"></i> Charts
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link p-0" href="">
-                                                <i class="fa fa-fw fa-compass"></i> Areas
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <a class="nav-link py-0" href="{{ route('payment-methods.create') }}">Add Payment
+                                    Method</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="#">Analytics</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Export</a></li>
             </ul>
         </div>
         <div class="col pt-2">
             <h2>
                 <a href="" data-target="#sidebar" data-toggle="collapse" class="hidden-md-up"><i class="fa fa-bars"></i></a>
-                Content
+                @if (Route::has('login'))
+                    <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+                        @auth
+                            <a href="{{ url('/dashboard') }}"
+                               class="text-sm text-gray-700 dark:text-gray-500 underline">Dashboard</a>
+                        @else
+                            <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log
+                                in</a>
+
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}"
+                                   class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
+                            @endif
+                        @endauth
+                    </div>
+                @endif
             </h2>
             @yield('content')
         </div>
