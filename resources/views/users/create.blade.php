@@ -13,7 +13,8 @@
                 Add a new payment method
             </p>
 
-            <form class="custom-validation" action="{{ route('users.add-payment-method') }}" novalidate=""
+            <form class="custom-validation" action="{{ route('users.payment-methods.add-payment-method') }}"
+                  novalidate=""
                   method="POST">
                 <div class="form-group">
                     <label>Name</label>
