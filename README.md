@@ -9,3 +9,5 @@
 5. Configure .env file with database details
 6. Run `php artisan migrate --seed` to create tables and seed data
 7. Run `php artisan serve` to start the server
+8. Open `http://localhost:8000` in your browser
+9. Use `admin@mail.com` and `password` to login where required
