@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Enums\PaymentMethodStatus;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Services\Interfaces\PaymentMethodServiceInterface;
@@ -155,7 +156,6 @@ class UsersController extends Controller
         }
     }
 
-
     /**
      * Remove the specified resource from storage.
      *
@@ -170,6 +170,31 @@ class UsersController extends Controller
             $deleted = $service->delete($id);
 
             return redirect()->back()->with('message', 'User deleted.');
+        } catch (Throwable $e) {
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Make default.
+     *
+     * @param UserServiceInterface $service
+     * @param int                  $id
+     * @param string               $paymentMethod
+     *
+     * @return RedirectResponse
+     */
+    public function makeDefault(UserServiceInterface $service, int $id, string $paymentMethod): RedirectResponse
+    {
+        try {
+            $user = $service->getRepository()->find($id);
+            foreach ($user->paymentmethods as $method) {
+                $user->paymentmethods()->updateExistingPivot($method->id, ['status' => PaymentMethodStatus::INACTIVE]);
+            }
+
+            $user->paymentmethods()->updateExistingPivot($paymentMethod, ['status' => PaymentMethodStatus::DEFAULT]);
+
+            return redirect()->back()->with('message', 'Payment method has been update to default.');
         } catch (Throwable $e) {
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
@@ -221,24 +246,16 @@ class UsersController extends Controller
      * @param UserServiceInterface $service
      * @param Request              $request
      * @param int                  $id
+     * @param string               $paymentMethod
      *
      * @return RedirectResponse
      */
-    public function removePaymentMethod(UserServiceInterface $service, Request $request, int $id): RedirectResponse
+    public function removePaymentMethod(UserServiceInterface $service, Request $request, int $id, string $paymentMethod): RedirectResponse
     {
         try {
-
-            $validator = Validator::make($request->all(), [
-                'payment_method' => ['required', 'numeric', 'exists:payment_methods,id'],
-            ]);
-
-            if ($validator->fails()) {
-                throw new RuntimeException($validator->errors()->first());
-            }
-
             $user = $service->getRepository()->find($id);
-            $user->paymentmethods()->dettach($validator->validated()['payment_method']);
-            return redirect()->back()->with('message', 'Payment method added.');
+            $user->paymentmethods()->dettach($paymentMethod);
+            return redirect()->back()->with('message', 'Payment method removed.');
         } catch (Throwable $e) {
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }

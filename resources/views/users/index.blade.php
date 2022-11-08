@@ -36,13 +36,13 @@
                                             </div>
                                             <div class="pull-right">
                                                 <form method="POST"
-                                                      action="{{ route('users.remove-payment-method',$method->id)  }}">
+                                                      action="{{ route('users.payment-methods.remove-payment-method',['id'=>$user->id,'paymentMethod'=>$method->id])  }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Remove</button>
                                                 </form>
                                                 @if($method->status!== 1)
-                                                    <a href="{{ route('payment-methods.edit',$method->id)  }}"
+                                                    <a href="{{ route('users.payment-methods.default',['id'=>$user->id,'paymentMethod'=>$method->id])  }}"
                                                        class="btn btn-success">
                                                         Make Default
                                                     </a>
@@ -54,12 +54,13 @@
                             </td>
                             <td>
                                 @if($user->paymentMethods->count() < 3)
-                                    <a href="{{ route('users.add-new-payment-method',$method->id)  }}"
+                                    <a href="{{ route('users.payment-methods.add-new-payment-method',$method->id)  }}"
                                        class="btn btn-success">
                                         Add Payment Method
                                     </a>
                                 @endif
-                                <form method="POST" action="{{ route('users.remove-all-payment-methods') }}">
+                                <form method="POST"
+                                      action="{{ route('users.payment-methods.remove-all-payment-methods') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Remove All Payment Methods</button>

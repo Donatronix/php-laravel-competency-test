@@ -27,36 +27,29 @@ require __DIR__ . '/auth.php';
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::controller(UsersController::class)
-        ->prefix('users')
-        ->as('users.')
-        ->group(function () {
-            Route::get('/', [UsersController::class, 'index'])->name('index');
-            Route::get('create', [UsersController::class, 'create'])->name('create');
-            Route::post('store', [UsersController::class, 'store'])->name('store');
-            Route::get('edit/{id}', [UsersController::class, 'edit'])->name('edit');
-            Route::put('update/{id}', [UsersController::class, 'update'])->name('update');
-            Route::delete('delete/{id}', [UsersController::class, 'delete'])->name('delete');
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UsersController::class, 'index'])->name('users.index');
+        Route::get('create', [UsersController::class, 'create'])->name('users.create');
+        Route::post('store', [UsersController::class, 'store'])->name('users.store');
+        Route::get('edit/{id}', [UsersController::class, 'edit'])->name('users.edit');
+        Route::put('update/{id}', [UsersController::class, 'update'])->name('users.update');
+        Route::delete('delete/{id}', [UsersController::class, 'delete'])->name('users.delete');
 
-            Route::prefix('payment-methods')
-                ->group(function () {
-                    Route::get('/new', 'addNewPaymentMethod')->name('add-new-payment-method');
-                    Route::post('/add', 'addPaymentMethod')->name('add-payment-method');
-                    Route::delete('/{id}/remove', 'removePaymentMethod')->name('remove-payment-method');
-                    Route::delete('/remove-all', 'removeAllPaymentMethods')->name('remove-all-payment-methods');
-                });
-        });
+        Route::get('/new', [UsersController::class, 'addNewPaymentMethod'])->name('users.payment-methods.add-new-payment-method');
+        Route::post('/add', [UsersController::class, 'addPaymentMethod'])->name('users.payment-methods.add-payment-method');
+        Route::delete('/{id}/{paymentMethod}/remove', [UsersController::class, 'removePaymentMethod'])->name('users.payment-methods.remove-payment-method');
+        Route::get('/{id}/{paymentMethod}/default', [UsersController::class, 'makeDefault'])->name('users.payment-methods.default');
+        Route::delete('/{id}/remove-all', [UsersController::class, 'removeAllPaymentMethods'])->name('users.payment-methods.remove-all-payment-methods');
 
-    Route::controller(PaymentMethodsController::class)
-        ->prefix('payment-methods')
-        ->as('payment-methods.')
-        ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/create', 'create')->name('create');
-            Route::post('/store', 'store')->name('store');
-            Route::get('edit/{id}', 'edit')->name('edit');
-            Route::put('update/{id}', 'update')->name('update');
-            Route::delete('delete/{id}', 'destroy')->name('delete');
-        });
+    });
+
+    Route::prefix('payment-methods')->group(function () {
+        Route::get('/', [PaymentMethodsController::class, 'index'])->name('payment-methods.index');
+        Route::get('/create', [PaymentMethodsController::class, 'create'])->name('payment-methods.create');
+        Route::post('/store', [PaymentMethodsController::class, 'store'])->name('payment-methods.store');
+        Route::get('edit/{id}', [PaymentMethodsController::class, 'edit'])->name('payment-methods.edit');
+        Route::put('update/{id}', [PaymentMethodsController::class, 'update'])->name('payment-methods.update');
+        Route::delete('delete/{id}', [PaymentMethodsController::class, 'destroy'])->name('payment-methods.delete');
+    });
 
 });
